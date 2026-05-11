@@ -9,23 +9,33 @@ const Contact = () => {
     message: "",
   });
 
+  // Handle Input Change
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
+  // Handle Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // ✅ 1. Send Email via EmailJS
+      // ✅ Send Email using EmailJS
       await emailjs.send(
-        "servicedhirendra005",
-        "template_yvv5665",
-        form,
-        "xBuGpLkyoWS8qyIE4"
+        "servicedhirendra005", // SERVICE ID
+        "template_yvv5665", // TEMPLATE ID
+        {
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          message: form.message,
+        },
+        "xBuGpLkyoWS8qyIE4" // PUBLIC KEY
       );
 
-      // ✅ 2. Send data to SheetDB
+      // ✅ Send data to SheetDB
       await fetch("https://sheetdb.io/api/v1/YOUR_API_ID", {
         method: "POST",
         headers: {
@@ -37,10 +47,17 @@ const Contact = () => {
       });
 
       alert("Message sent successfully!");
-      setForm({ name: "", email: "", phone: "", message: "" });
+
+      // Reset Form
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
 
     } catch (error) {
-      console.error(error);
+      console.error("ERROR:", error);
       alert("Something went wrong!");
     }
   };
@@ -54,6 +71,7 @@ const Contact = () => {
           <h1 className="text-3xl sm:text-5xl font-bold mb-4">
             Contact <span className="text-cyan-400">GEETA-X</span>
           </h1>
+
           <p className="text-gray-400">
             Let’s connect and grow your business together 🚀
           </p>
@@ -61,7 +79,7 @@ const Contact = () => {
 
         <div className="grid md:grid-cols-2 gap-10">
 
-          {/* 📍 Map */}
+          {/* Google Map */}
           <div className="w-full h-[350px] rounded-2xl overflow-hidden border border-white/10">
             <iframe
               title="location"
@@ -71,11 +89,12 @@ const Contact = () => {
             ></iframe>
           </div>
 
-          {/* 📝 Form */}
+          {/* Contact Form */}
           <form
             onSubmit={handleSubmit}
             className="space-y-4 bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur"
           >
+
             <input
               type="text"
               name="name"
@@ -83,7 +102,7 @@ const Contact = () => {
               value={form.name}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/20"
+              className="w-full p-3 rounded-lg bg-white/10 border border-white/20 outline-none"
             />
 
             <input
@@ -93,7 +112,7 @@ const Contact = () => {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/20"
+              className="w-full p-3 rounded-lg bg-white/10 border border-white/20 outline-none"
             />
 
             <input
@@ -103,7 +122,7 @@ const Contact = () => {
               value={form.phone}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/20"
+              className="w-full p-3 rounded-lg bg-white/10 border border-white/20 outline-none"
             />
 
             <textarea
@@ -111,16 +130,19 @@ const Contact = () => {
               placeholder="Your Message"
               value={form.message}
               onChange={handleChange}
+              rows="5"
               required
-              rows="4"
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/20"
+              className="w-full p-3 rounded-lg bg-white/10 border border-white/20 outline-none"
             />
 
-            <button className="w-full bg-cyan-400 text-black py-3 rounded-lg font-semibold hover:scale-105 transition">
-              Send Message
+            <button
+              type="submit"
+              className="w-full bg-cyan-400 text-black py-3 rounded-lg font-semibold hover:scale-105 transition-all duration-300"
+            >
+              Send Message 🚀
             </button>
-          </form>
 
+          </form>
         </div>
       </div>
     </section>
